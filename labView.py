@@ -6,6 +6,9 @@ import os
 TEMP = "Temp. (cel)"
 TIME = "Time (s)"
 
+
+HIGH = True
+
 dirname = os.path.dirname(__file__)
 
 boilH = []
@@ -27,7 +30,7 @@ class tempData(): #Class for each file
         self.time = self.time.subtract(self.time[0]) #Subtract all elements by the start time so you start in time 0
         self.time = self.time / 1000 #Make to seconds
         #Interesting times
-        if self.boil: 
+        if self.boil:
             self.time80 = min(self.tempDF[TIME].where(self.tempDF[TEMP] < 80).dropna()) #Time where the temperature first hits less than 80
     
     
@@ -49,11 +52,18 @@ def multiPlot(data): #Plot all the graphs you want. Need 2D list as paramter
     plt.legend(loc="lower left")
 
 def avgPlot(temps): #temps is list of objects with .temp attribute 
-    avgTemp = numpy.zeros(temps[0].temp.size)
+    lowestSize = temps[0].temp.size
     for i in temps:
-        avgTemp += i.temp
+        if lowestSize > i.temp.size:
+            lowestSize = i.temp.size
+            print("low: " + str(lowestSize))
+    avgTemp = numpy.zeros(lowestSize)
+    print(avgTemp.shape)
+    for i in temps:
+        print(i.temp[:lowestSize].shape)
+        avgTemp += i.temp[:lowestSize]
     avgTemp = avgTemp/len(temps)
-    plt.plot(temps[0].time, avgTemp)
+    plt.plot(temps[0].time[:lowestSize], avgTemp, label= "Average")
     plt.xlabel(TIME)
     plt.ylabel(TEMP)
     plt.legend(loc = "lower left")
@@ -74,29 +84,32 @@ for i in os.listdir(os.path.join(dirname, "temperatureData")): #Sort all the fil
 
 boilH = makeTempList(boilH, True)
 boilL = makeTempList(boilL, True)
-tapH = makeTempList(tapH, False)
-tapL = makeTempList(tapL, False)
 cup = makeTempList(cup, True)
-
-avgPlot(boilH)
-
-
-plt.show()
-"""    
-#Data
-tempData = pandas.read_excel("boil_h1.xlsx")
-tempData = tempData.rename(columns={"Formula Result (Collected)" : "Temperature (cel)", "Collected" : "Time (ms)"})
-
-print(min(tempData["Time (ms)"].where(tempData["Temperature (cel)"] < 80).dropna()))
+tapH = makeTempList(tapH, True)
+tapL = makeTempList(tapL, True)
 
 
-#Plotting
-plt.plot(tempData["Time (ms)"], tempData["Temperature (cel)"])
+# multiPlot([cup])
+# plt.figure()
+# avgPlot(cup)
+# plt.figure()
+# multiPlot([boilH])
+# plt.figure()
+# avgPlot(boilH)
+# plt.figure()
+# multiPlot([boilL])
+# plt.figure()
+# avgPlot(boilL)
+# plt.figure()
+# multiPlot([tapH])
+# plt.figure()
+avgPlot(tapH)
+# plt.figure()
+# multiPlot([tapL])
+# plt.figure()
+# avgPlot(tapL)
 
-plt.xlabel(tempData.columns.values[1])
-plt.ylabel(tempData.columns.values[0])
+
+
 plt.grid()
-plt.title("Temperature of Thermistor")
 plt.show()
-
-"""
