@@ -31,7 +31,8 @@ class tempData(): #Class for each file
         self.time = self.time / 1000 #Make to seconds
         #Interesting times
         if self.boil:
-            self.time80 = min(self.tempDF[TIME].where(self.tempDF[TEMP] < 80).dropna()) #Time where the temperature first hits less than 80
+            self.time80 = min(self.tempDF[TIME].where(self.tempDF[TEMP] < 85).dropna()) #Time where the temperature first hits less than 80
+            #self.max = min(self.tempDF[TIME][self.tempDF[TEMP].max.index])
     
     
     def plot(self):
@@ -66,7 +67,7 @@ def avgPlot(temps): #temps is list of objects with .temp attribute
     plt.plot(temps[0].time[:lowestSize], avgTemp, label= "Average")
     plt.xlabel(TIME)
     plt.ylabel(TEMP)
-    plt.legend(loc = "lower left")
+    plt.legend(loc = "0")
 
 
 
@@ -82,34 +83,43 @@ for i in os.listdir(os.path.join(dirname, "temperatureData")): #Sort all the fil
     elif "taph" in i:
         tapH.append(i)
 
-boilH = makeTempList(boilH, True)
-boilL = makeTempList(boilL, True)
+#boilH = makeTempList(boilH, True)
+# boilL = makeTempList(boilL, True)
 cup = makeTempList(cup, True)
-tapH = makeTempList(tapH, True)
-tapL = makeTempList(tapL, True)
+# tapH = makeTempList(tapH, True)
+# tapL = makeTempList(tapL, True)
+multiPlot([cup])
 
+plt.show()
 
 # multiPlot([cup])
+# plt.savefig('cup.png')
 # plt.figure()
 # avgPlot(cup)
+# plt.savefig('cupAvg.png')
 # plt.figure()
 # multiPlot([boilH])
+# plt.savefig('boilH.png')
 # plt.figure()
 # avgPlot(boilH)
+# plt.savefig('boilHAvg.png')
 # plt.figure()
 # multiPlot([boilL])
+# plt.savefig('boilL.png')
 # plt.figure()
 # avgPlot(boilL)
+# plt.savefig('boilLAvg.png')
 # plt.figure()
 # multiPlot([tapH])
+# plt.savefig('tapH.png')
 # plt.figure()
-avgPlot(tapH)
+# avgPlot(tapH)
+# plt.savefig('tapHAVG.png')
 # plt.figure()
 # multiPlot([tapL])
+# plt.savefig('tapL.png')
 # plt.figure()
 # avgPlot(tapL)
+# plt.savefig('tapLAVG.png')
 
 
-
-plt.grid()
-plt.show()
