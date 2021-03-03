@@ -50,7 +50,7 @@ def multiPlot(data): #Plot all the graphs you want. Need 2D list as paramter
             x.plot()
     plt.xlabel(TIME)
     plt.ylabel(TEMP)
-    plt.legend(loc="lower left")
+    plt.legend(loc="upper left")
 
 def avgPlot(temps): #temps is list of objects with .temp attribute 
     lowestSize = temps[0].temp.size
@@ -83,12 +83,15 @@ for i in os.listdir(os.path.join(dirname, "temperatureData")): #Sort all the fil
     elif "taph" in i:
         tapH.append(i)
 
-#boilH = makeTempList(boilH, True)
+# cup = makeTempList(cup, True)
 # boilL = makeTempList(boilL, True)
-cup = makeTempList(cup, True)
+boilH = makeTempList(boilH, True)
 # tapH = makeTempList(tapH, True)
 # tapL = makeTempList(tapL, True)
-multiPlot([cup])
+#multiPlot([cup])
+avgPlot(boilH)
+plt.plot(903.2, 39.355, 'ro', label = "1 tau (41.2s after step)")
+plt.legend()
 
 plt.show()
 
